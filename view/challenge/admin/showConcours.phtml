@@ -1,0 +1,36 @@
+<?php
+	$this->headTitle("Gérer les participations - ".$concours->getTitreConcours());
+	$tableau_etats = array("A venir", "En cours", "Vote du Jury", "Terminé");
+	$tableau_etats_class = array("concoursAvenir", "concoursEnCours", "voteEnCours", "concoursTermine");
+	$tableau_jeux = array("DOFUS PC", "DOFUS TOUCH", "DOFUS PC & DOFUS TOUCH");
+	$tableau_jeux_class = array("dofusPc", "dofusTouch", "dofusBoth");
+?>
+<div class="row" style="margin:0!important;">
+	<div class="concours_title">
+		<h1><?= $concours->getTitreConcours() ?></h1>
+		<div class="hidden-xs <?php echo $tableau_etats_class[$status];?>" style="position:absolute;right:5px;top:21px;margin-right:5px;"></div>
+		<div class="hidden-xs <?php echo $tableau_jeux_class[$concours->getGame()];?>" style="position:absolute;right:55px;top:21px;margin-right:5px;"></div>
+		<span>du <?php echo date("d/m/Y à H:i:s",$concours->getDebutConcours());?> au <?php echo date("d/m/Y à H:i:s",$concours->getFinConcours());?></span>
+	</div>
+	<h2>Gérer les participations</h2>
+	<div class="row" style="margin:0!important;">
+		<div class="alert alert-info text-center">Cliquez sur une participation pour en voir les détails.</div>
+	</div>
+	<div class="row" style="margin:0!important;">
+		<?php
+		foreach($concours->getParticipations() as $participation) {
+			$participantName = $this->userRO->find($participation->getParticipantId())->getPseudonym();
+			echo '<div style="cursor:pointer;margin-bottom: 10px;" id="participation_'.$participation->getIdParticipation().'" class="linkmodal col-xs-6 col-md-4" data-name="Anonyme" data-image="'.$participation->getImgParticipation().'" data-text="'.$participation->getDescParticipation().'"  data-id="'.$participation->getIdParticipation().'"><div style="background-image: url('.$participation->getImgParticipation().');" class="participationPicture"><span class="participationUser">Anonyme</span></div></div>';
+		}
+		?>
+	</div>
+</div>
+
+<div id="dialogdelParticipation" title="Gérer une participation">
+	<div class="text-center">
+		<strong>Participation de : <span id="userName"></span>.</strong><br>
+		<img src="" id="imageSrc" class="img-thumbnail" style="width:100%;max-width:500px;margin:auto;display:block;"><br>
+		<blockquote class="text-justify" id="imageDesc"></blockquote>
+		<input type="hidden" id="selectParticipation"/>
+	</div>
+</div>

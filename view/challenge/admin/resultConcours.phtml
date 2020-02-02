@@ -1,0 +1,88 @@
+<?php
+$this->headTitle("Résultat du concours - ". $concours->getTitreConcours());
+$this->headLink()->appendStylesheet('https://jolstatic.fr/dofus/theme/3.0/standard/js_spe/datatables.min.css');
+$this->headScript()->appendFile('https://jolstatic.fr/dofus/theme/3.0/standard/js_spe/datatables.min.js');
+
+$tableau_etats = array("A venir", "En cours", "Vote du Jury", "Terminé");
+$tableau_etats_class = array("concoursAvenir", "concoursEnCours", "voteEnCours", "concoursTermine");
+$tableau_jeux = array("DOFUS PC", "DOFUS TOUCH", "DOFUS PC & DOFUS TOUCH");
+$tableau_jeux_class = array("dofusPc", "dofusTouch", "dofusBoth");
+?>
+<div class="row" style="margin:0!important;">
+	<div class="concours_title">
+		<h1><?= $concours->getTitreConcours() ?></h1>
+		<div class="hidden-xs <?php echo $tableau_etats_class[$status];?>" style="position:absolute;right:5px;top:21px;margin-right:5px;"></div>
+		<div class="hidden-xs <?php echo $tableau_jeux_class[$concours->getGame()];?>" style="position:absolute;right:55px;top:21px;margin-right:5px;"></div>
+		<span>du <?php echo date("d/m/Y à H:i:s",$concours->getDebutConcours());?> au <?php echo date("d/m/Y à H:i:s",$concours->getFinConcours());?></span>
+	</div>
+</div>
+<h2>Résultats du concours</h2>
+<div class="row" style="margin:0!important;">
+	<table id="search_result" class="table table-bordered table-striped" data-page-length="100">
+		<thead>
+			<tr>
+				<th width="5%">#</th>
+				<th width="15%">Image</th>
+				<th width="15%">Joueur</th>
+				<th width="50%">Description</th>
+				<th width="10%">Résultat</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php
+				$place = 0;
+				foreach($participations as $participation) {
+					$userP = $this->userRO->find($participation[1]);
+					$place++;
+			?>
+					<tr>
+						<td class="text-center">
+							<strong><?= $place ?></strong>
+						</td>
+						<td class="text-center">
+							<a href="<?= $participation[2] ?>" class="fancybox">
+								<div style="background:url(<?= $participation[2] ?>);background-position: center center;background-repeat:no-repeat;width:150px;height:150px;border:5px solid white;border-radius:5px;float:left;margin:5px;">	
+								</div>
+							</a>
+						</td>
+						<td class="text-center" style="vertical-align:middle;">
+							<strong><a target="_blank" href="https://dofus.jeuxonline.info/profil/<?= $participation[1] ?>"><?= $userP->getPseudonym()?></a></strong>
+						</td>
+						<td class="text-justify" style="position:relative;vertical-align:middle;">
+							<blockquote><?= $participation[3]?></blockquote>
+						</td>
+						<td class="text-center" style="vertical-align:middle;">
+							<?= $participation[4] ?>
+						</td>
+					</tr>
+			<?php
+				}
+			?>
+		</tbody>
+	</table>
+
+</div>
+<script>
+	$(function() {
+		$("#search_result").DataTable({
+			"order": [
+				[4, "desc"]
+			],
+			"columnDefs": [
+			    { "type": "num", "targets": 4 }
+			],
+			pagingType: 'first_last_numbers',
+			language: {
+				paginate: {
+					first: 'Premier',
+					last: 'Dernier'
+				},
+				zeroRecords: "Aucune donnée ne correspond à  votre recherche",
+				info: "Affichage de _START_ à  _END_ sur _TOTAL_ données",
+				infoFiltered: " (filtrée(s) sur _MAX_ données)",
+				lengthMenu: "Afficher _MENU_ données",
+				search: "Rechercher :"
+			}
+		});
+	});
+</script>

@@ -1,0 +1,75 @@
+<?php
+$this->headLink()->appendStylesheet($this->basePath('module_style/challenge_style.css'));
+$this->headScript()->appendFile($this->basePath('module_js/challenge/script.js'));
+
+$idJol = $this->user()->getId();
+$teamJol = $this->user()->inJolGroup();
+
+$this->headMeta()->setProperty('og:url', 'https://dofus.jeuxonline.info/challenge-jolia');
+$this->headMeta()->setProperty('og:image', 'https://jolstatic.fr/dofus/Modules/Challenge/main/og_picture.png');
+$this->headMeta()->setProperty('og:title', 'Challenge de Jolia | JeuxOnline - Dofus');
+
+?>
+
+<div class="container-fluid">
+	<!-- div class="row" -->
+	<div class="jol-layout-row-content jol-layout-flex">
+		<div class="col-xs-12 col-md-9">
+			<?= $this->openModule() ?><?= $this->openModuleBody() ?> 
+			<article class="jol-article">
+				<div class="jol-article-body" style="padding:0!important;">
+					<div class="row" style="margin:0!important;">
+						<img src="//jolstatic.fr/dofus/Modules/Challenge/main/banniere_challenge.jpg" class="img-responsive" alt=""/>
+						<div class="nav_challenge">
+							<div class="col-xs-4">
+								<a href="<?php echo $this->url('challenge'); ?>">Accueil / Home</a>
+							</div>
+							<div class="col-xs-4" id="btn_concours">
+								<a href="<?php echo $this->url('challenge/listConcours'); ?>"><span>> Participer <</span></a>
+							</div>
+							<div class="col-xs-4">
+								<a href="<?php echo $this->url('challenge/help'); ?>">Aide / Help</a>
+							</div>
+						</div>
+					</div>
+					<div class="row" style="margin:0!important;padding:5px;">
+						<?php if($this->user()->getId() == 0) { ?>
+							<div class="alert alert-info text-center">Tu dois disposer d'un compte JeuxOnline et être connecté avec celui-ci afin de participer au Challenge de Jolia !</div>
+						<?php } ?>
+						<br>
+						<?= $this->content ?>
+					</div>
+				</div>
+			</article>
+			<?= $this->closeModuleBody() ?><?= $this->closeModule() ?>
+		</div>
+		<div class="col-xs-12 col-md-3 bg_color_aside">
+			<div class="margeTop5" id="block_aside_misc">
+				<?= $this->openModule() ?><?= $this->openModuleBody() ?> 
+				<div id="block_partenaire">
+					<?php if($teamJol == 1) { ?>
+					<a href="<?= $this->url('challenge/admin') ?>">
+						<img class="img-responsive" src="//jolstatic.fr/dofus/Modules/Profil/btn_administration.png" style="margin-bottom:5px;" alt="administration_profil">
+					</a>
+					<?php } ?>
+					<a href="https://www.twitch.tv/crepusculeopaline" target="_blank">
+						<img class="img-responsive" src="//jolstatic.fr/dofus/Modules/Home/images/partenaire_esport.png" alt="partenaire_esport">
+					</a>
+					<a href="https://dofusbook.net" target="_blank">
+						<img class="img-responsive" src="//jolstatic.fr/dofus/Modules/Home/images/btn_dofusbook.png" alt="dofusbook">
+					</a>
+					<a href="https://discord.gg/xhHNBFf" target="_blank">
+						<img class="img-responsive" src="//jolstatic.fr/dofus/Modules/Home/images/discord.png" alt="discord">
+					</a>
+				</div>
+				<?php echo $this->ad('square'); ?>
+				<div class="margeTop10 text-center" id="block_jeuxonline">
+					<a href="http://www.jeuxonline.info/">
+						<img src="//jolstatic.fr/dofus/Modules/Home/images/jeuxonline.png" alt="jeuxonline">
+					</a>
+				</div>
+				<?= $this->closeModuleBody() ?><?= $this->closeModule() ?>
+			</div>
+		</div>
+	</div>
+</div>

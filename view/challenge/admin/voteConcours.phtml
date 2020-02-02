@@ -1,0 +1,126 @@
+<?php
+	$this->headTitle("Voter pour les participations - ".$concours->getTitreConcours());
+	$this->headLink()->appendStylesheet('https://jolstatic.fr/dofus/theme/3.0/standard/js_spe/datatables.min.css');
+	$this->headScript()->appendFile('https://jolstatic.fr/dofus/theme/3.0/standard/js_spe/datatables.min.js');
+
+	$allowed_users = explode(',', $concours->getAllowUsers());
+
+	$tableau_etats = array("A venir", "En cours", "Vote du Jury", "Terminé");
+	$tableau_etats_class = array("concoursAvenir", "concoursEnCours", "voteEnCours", "concoursTermine");
+	$tableau_jeux = array("DOFUS PC", "DOFUS TOUCH", "DOFUS PC & DOFUS TOUCH");
+	$tableau_jeux_class = array("dofusPc", "dofusTouch", "dofusBoth");
+?>
+<div class="row" style="margin:0!important;">
+	<div class="concours_title">
+		<h1><?= $concours->getTitreConcours() ?></h1>
+		<div class="hidden-xs <?php echo $tableau_etats_class[$status];?>" style="position:absolute;right:5px;top:21px;margin-right:5px;"></div>
+		<div class="hidden-xs <?php echo $tableau_jeux_class[$concours->getGame()];?>" style="position:absolute;right:55px;top:21px;margin-right:5px;"></div>
+		<span>du <?php echo date("d/m/Y à H:i:s",$concours->getDebutConcours());?> au <?php echo date("d/m/Y à H:i:s",$concours->getFinConcours());?></span>
+	</div>
+	<h2>Attribution des notes</h2>
+	<div class="text-left">
+		<strong>Votants autorisés : Équipe JOL-DOFUS
+			<?php 
+				if($concours->getAllowUsers() != null) {
+					foreach($allowed_users as $user) { 
+						$user = $this->userRO->find($user);
+						echo ', <a style="color:#749B40;" href="https://forums.jeuxonline.info/member.php?u='.$user->getId().'" target="_blank">'.$user->getPseudonym().'</a>';
+					}
+				} 
+			?>
+		.</strong>
+	</div><br>
+	<div class="row" style="margin:0!important;">
+		<div class="alert alert-info text-center">
+		Cliquez sur l'image d'une participation pour en voir les détails.<br>
+		<strong>Légende des Votes :</strong><br>
+		<i class="jol-icon jol-icon-ellipsis-h"></i> : Non voté. 
+		<i class="jol-icon jol-icon-check" style="color:#07981B;"></i> : Vote existant/ajouté. 
+		<i class="jol-icon jol-icon-check" style="color:#0785CE;"></i> : Vote existant/modifié. 
+		<i class="jol-icon jol-icon-close" style="color:#CE0735;"></i> : Erreur. 
+	</div>
+		<input type="hidden" value="<?= $this->user()->getId() ?>" id="votantId"/>
+		<input type="hidden" value="<?= $concours->getIdConcours() ?>" id="concoursId"/>
+	</div>
+	<div class="row" style="margin:0!important;">
+		<table id="search_result" class="table table-bordered table-striped" data-page-length="100">
+			<thead>
+				<tr>
+					<th width="15%">Image</th>
+					<th width="15%">Joueur</th>
+					<th width="50%">Description</th>
+					<th width="15%">Vote</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php 
+					foreach($participations as $participation) {
+						$userP = $this->userRO->find($participation[1]);
+						if($participation[4] == 0) {
+							$voteStatut = 'class="jol-icon jol-icon-ellipsis-h"';
+						} else {
+							$voteStatut = 'class="jol-icon jol-icon-check" style="color:#07981B;"';
+						}
+				?>
+					<tr>
+						<td class="text-center">
+							<a href="<?= $participation[3] ?>" class="fancybox">
+								<div style="background:url(<?= $participation[3] ?>);background-position: center center;background-repeat:no-repeat;width:150px;height:150px;border:5px solid white;border-radius:5px;float:left;margin:5px;">	
+								</div>
+							</a>
+						</td>
+						<td class="text-center" style="vertical-align:middle;">
+							Inconnu
+						</td>
+						<td class="text-justify" style="position:relative;vertical-align:middle;">
+							<blockquote><?= $participation[2]?></blockquote>
+						</td>
+						<td class="text-center" style="vertical-align:middle;">
+							<div class="input-group">
+								<span class="input-group-addon"><i id="icon_<?= $participation[0]?>" <?= $voteStatut ?>></i></span>
+								<select class="form-control select_vote" data-id="<?= $participation[0]?>">
+									<option value="--">--</option>
+									<?php
+										for($i = 0; $i <=5; $i = $i + 1) {
+											if($i == $participation[5]) {
+												echo '<option selected value="'.$i.'">'.$i.'</option>';
+											}
+											else {
+												echo '<option value="'.$i.'">'.$i.'</option>';
+											}
+										}
+
+									?>
+								</select>
+							</div>
+						</td>
+					</tr>
+				<?php
+					}
+				?>
+			</tbody>
+		</table>
+
+	</div>	
+</div>
+<script>
+	$(function() {
+		$("#search_result").DataTable({
+	        "order": [
+	            [1, "asc"]
+	        ],
+	        pagingType: 'first_last_numbers',
+	        language: {
+	            paginate: {
+	                first: 'Premier',
+	                last: 'Dernier'
+	            },
+	            zeroRecords: "Aucune donnée ne correspond à  votre recherche",
+	            info: "Affichage de _START_ à  _END_ sur _TOTAL_ données",
+	            infoFiltered: " (filtrée(s) sur _MAX_ données)",
+	            lengthMenu: "Afficher _MENU_ données",
+	            search: "Rechercher :"
+	        }
+	    });
+	});
+</script>

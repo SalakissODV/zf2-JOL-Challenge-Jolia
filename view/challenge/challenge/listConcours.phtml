@@ -1,0 +1,93 @@
+<?php
+$this->headLink()->appendStylesheet('https://jolstatic.fr/dofus/theme/3.0/standard/js_spe/datatables.min.css');
+$this->headScript()->appendFile('https://jolstatic.fr/dofus/theme/3.0/standard/js_spe/datatables.min.js');
+
+$title = 'Challenge de Jolia - Liste des Concours';
+$this->headTitle($title);
+
+$tableau_etats = array("A venir", "En cours", "Vote du Jury", "Terminé");
+$tableau_etats_class = array("concoursAvenir", "concoursEnCours", "voteEnCours", "concoursTermine");
+$tableau_jeux = array("DOFUS PC", "DOFUS TOUCH", "DOFUS PC & DOFUS TOUCH");
+$tableau_jeux_class = array("dofusPc", "dofusTouch", "dofusBoth");
+
+$getConcours = $this->getConcours;
+?>
+<div class="concours_title">
+	<h1>LE CHALLENGE DE JOLIA</h1>
+	<p>
+		Depuis cette page, tu peux retrouver l'ensemble des concours organisés dans le passé ainsi que ceux en cours ou à venir. Pour participer à un concours, il te faut être connecté à notre plateforme avec un compte JeuxOnline. L'accès à la page de participation d'un concours te sera alors débloqué une fois connecté. Pour les concours passés, aucun compte n'est requis pour en consulter les participations, règles et gagnants.
+	</p>
+</div>
+<div class="row" style="margin-left:0!important;margin-right:0!important!;">
+	<table id="search_result" class="table table-bordered table-striped" data-page-length="25">
+		<thead>
+			<tr>
+				<th>Titre / Title</th>
+				<th>Jeu / Game</th>
+				<th>Statut / Status</th>
+				<th>Début - Fin / Start - End (GMT+1)</th>
+				<th>Action</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php
+				foreach($getConcours as $concours) {
+					if(time() > $concours->getDebutConcours() && time() < $concours->getFinConcours()) {
+			            $status = 1; // En cours
+			            if($this->isConnected == 1) {
+			            	$goTo = '<a href="'.$this->url('challenge/participer', ['id'=> $concours->getIdConcours()]).'" class="goParticipate btn btn-success"><i class="jol-icon jol-icon-pencil"></i></a>';
+			            } else {
+			            	$goTo = '<button class="goConnected btn btn-danger"><i class="jol-icon jol-icon-user"></i></button>';
+			            }
+			        } else if (time() > ($concours->getFinconcours() + 604800)) {
+			            $status = 3; // Terminé
+			            $goTo = '<a href="'.$this->url('challenge/voir', ['id'=> $concours->getIdConcours()]).'" class="goSee btn btn-info"><i class="jol-icon jol-icon-eye"></i></a>';
+
+			        } else if (time() > $concours->getFinConcours()) {
+			            $status = 2; // Vote du Jury
+			        	$goTo = '<a href="'.$this->url('challenge/voir', ['id'=> $concours->getIdConcours()]).'" class="goSee btn btn-info"><i class="jol-icon jol-icon-eye"></i></a>';
+
+			        } else {
+			        	$goTo = '<button disabled="disabled" class="btn btn-success"><i class="jol-icon jol-icon-pencil"></i></button>';
+			            $status = 0; // A venir
+			        }
+			?>
+					<tr>
+						<td class="text-center" style="vertical-align:middle;"><strong><?= $concours->getIdConcours() ?></strong></td>
+			        	<td class="text-center" style="vertical-align:middle;"><div class="<?= $tableau_jeux_class[$concours->getGame()] ?>"></div></td>
+			        	<td class="text-center" style="vertical-align:middle;"><div class="<?= $tableau_etats_class[$status] ?>"></div><br><strong><?= $tableau_etats[$status]?></td>
+			        	<td class="text-center" style="vertical-align:middle;"><small><strong style="text-transform:uppercase;"><?= $concours->getTitreConcours() ?></strong><br><strong>Début :</strong> <?= date("d/m/Y à H:i:s", $concours->getDebutConcours()) ?><br><strong>Fin :</strong> <?= date("d/m/Y à H:i:s", $concours->getFinConcours()) ?></small></td>
+						<td class="text-center" style="vertical-align:middle;"><?= $goTo ?></td>
+					</tr>
+			<?php
+				}
+			?>
+		</tbody>
+	</table>
+</div>
+<script>
+	$(function() {
+		$("#search_result").DataTable({
+	        "columnDefs": [{
+	            "targets": [0],
+	            "visible": false,
+	            "searchable": false
+	        }],
+	        "order": [
+	            [0, "desc"]
+	        ],
+	        pagingType: 'first_last_numbers',
+	        language: {
+	            paginate: {
+	                first: 'Premier',
+	                last: 'Dernier'
+	            },
+	            zeroRecords: "Aucune donnée ne correspond à  votre recherche",
+	            info: "Affichage de _START_ à  _END_ sur _TOTAL_ données",
+	            infoFiltered: " (filtrée(s) sur _MAX_ données)",
+	            lengthMenu: "Afficher _MENU_ données",
+	            search: "Rechercher :"
+	        }
+	    });
+	});
+</script>

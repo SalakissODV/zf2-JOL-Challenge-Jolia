@@ -1,0 +1,299 @@
+#block_partenaire > a > img {
+	margin: auto auto 5px auto;
+}
+.jol-module-body {
+    padding: 0!important;
+}
+/* Style provisoire pour le menu d'accès aux pages du module */
+
+.nav_challenge {
+	background-image: -webkit-linear-gradient(to left, #0c0b0b 0%, #0c0b0b 15%, #71363c 50%, #0c0b0b 85%, #0c0b0b 100%); /* For Chrome 25 and Safari 6, iOS 6.1, Android 4.3 */
+ 	background-image:    -moz-linear-gradient(to left, #0c0b0b 0%, #0c0b0b 15%, #71363c 50%, #0c0b0b 85%, #0c0b0b 100%); /* For Firefox (3.6 to 15) */
+ 	background-image:      -o-linear-gradient(to left, #0c0b0b 0%, #0c0b0b 15%, #71363c 50%, #0c0b0b 85%, #0c0b0b 100%); /* For old Opera (11.1 to 12.0) */ 
+ 	background-image:         linear-gradient(to left, #0c0b0b 0%, #0c0b0b 15%, #71363c 50%, #0c0b0b 85%, #0c0b0b 100%); /* Standard syntax; must be last */
+	min-height: 40px;
+	height: 40px;
+	font-family: Roboto, sans-serif;
+	color: #FFFFFF;
+	border-top: none;
+	border-left: 1px solid #081536;
+	border-right: 1px solid #081536;
+	border-bottom: 1px solid #081536;
+	font-weight: bold;
+	text-align: center;
+}
+
+.nav_challenge a,
+.nav_challenge span {
+	vertical-align: middle;
+	line-height: 35px;
+	color: #FFFFFF;
+	text-decoration: none;
+	white-space: nowrap;
+	text-shadow: rgba(0, 0, 0, 0.7) 1px 1px, rgba(0, 0, 0, 0.7) -1px 1px, rgba(0, 0, 0, 0.7) -1px -1px, rgba(0, 0, 0, 0.7) 1px -1px;
+}
+
+.nav_challenge a:hover {
+	color: #eaa400;
+}
+
+.nav_challenge span {
+	font-size: 18px;
+	font-family: "Roboto";
+	color: #eaa400;
+	cursor: pointer;
+	text-transform: uppercase;
+	line-height: 35px;
+}
+
+/* Style pour les titres principaux du module */
+.concours_title {
+	text-align: center;
+	position:relative;
+}
+.concours_title h1 {
+	font-weight: bold;
+	font-family : Roboto, sans-serif;
+	text-transform: uppercase;
+	color: #eaa400;
+	border:none!important;
+	text-shadow: rgba(0, 0, 0, 0.7) 1px 1px, rgba(0, 0, 0, 0.7) -1px 1px, rgba(0, 0, 0, 0.7) -1px -1px, rgba(0, 0, 0, 0.7) 1px -1px;
+	margin: 0!important
+}
+.concours_title span {
+	font-style: italic;
+	font-family: Roboto, sans-serif;
+	color: #000000;
+	font-size: 15px;
+}
+
+.btnchallenge {
+	font-family: Roboto, sans-serif;
+	font-weight: bold;
+	color: #FFB400;
+	background: #303030;
+	border: 1px solid #eaa400;
+	padding: 5px;
+	text-transform: uppercase;
+	font-size: 16px;
+	text-decoration: none;
+	transition: all 1s linear;
+}
+
+.btnchallenge:hover {
+	color: #FFB400;
+	text-decoration: underline;
+	border: 1px solid #303030;
+	transition: all 1s linear;
+}
+/* Style de la boîte de dialogue utilisée sur le module */
+.ui-dialog {
+	max-width: 600px;
+	margin: auto auto;
+}
+.ui-widget.ui-widget-content {
+    border: 1px solid #992113;
+    background: #edeade;
+    color: #303030;
+    text-shadow: none!important;
+}
+
+.ui-widget.ui-widget-content .ui-widget-header {
+    border: 1px solid #751425;
+    background: #72333e;
+    color: #fff;
+    font-weight: bold;
+}
+
+.ui-widget-content {
+    border: 1px solid #751425;
+        border-top-width: 1px;
+        border-right-width: 1px;
+        border-bottom-width: 1px;
+        border-left-width: 1px;
+    background: #edeade;
+    background-image: none;
+    color: #333;
+}
+
+.ui-widget.ui-widget-content .input-group-addon {
+    color: #fff;
+    background-color: #72333e;
+    border: 1px solid #751425;
+        border-right-width: 1px;
+        border-right-style: solid;
+        border-right-color: rgb(117, 20, 37);
+}
+
+.ui-widget-content .form-control {
+	border: 1px solid #75142580;
+	background: #fffdf5;
+}
+
+/* Style associé à l'état d'un concours */
+
+.concoursAvenir {
+	background-image: url('//jolstatic.fr/dofus/Modules/Challenge/main/status/a_venir.png');
+	background-repeat: no-repeat;
+	display: inline-block;
+	margin: auto;
+	width: 50px;
+	height: 50px;
+}
+.concoursEnCours {
+	background-image: url('//jolstatic.fr/dofus/Modules/Challenge/main/status/en_cours.png');
+	background-repeat: no-repeat;
+	display: inline-block;
+	margin: auto;
+	width: 50px;
+	height: 50px;
+}
+.voteEnCours {
+	background-image: url('//jolstatic.fr/dofus/Modules/Challenge/main/status/vote_en_cours.png');
+	background-repeat: no-repeat;
+	display: inline-block;
+	margin: auto;
+	width: 50px;
+	height: 50px;
+}
+.concoursTermine {
+	background-image: url('//jolstatic.fr/dofus/Modules/Challenge/main/status/termine.png');
+	background-repeat: no-repeat;
+	display: inline-block;
+	margin: auto;
+	width: 50px;
+	height: 50px;
+}
+
+/* Style associé au jeu lié au concours */
+.dofusPc {
+	background-image: url('//jolstatic.fr/dofus/Modules/Challenge/main/games/dofusPc.png');
+	background-repeat: no-repeat;
+	display: inline-block;
+	margin: auto;
+	width: 50px;
+	height: 50px;
+}
+.dofusTouch {
+	background-image: url('//jolstatic.fr/dofus/Modules/Challenge/main/games/dofusTouch.png');
+	background-repeat: no-repeat;
+	display: inline-block;
+	margin: auto;
+	width: 50px;
+	height: 50px;
+}
+.dofusBoth {
+	background-image: url('//jolstatic.fr/dofus/Modules/Challenge/main/games/dofusBoth.png');
+	background-repeat: no-repeat;
+	display: inline-block;
+	margin: auto;
+	width: 50px;
+	height: 50px;
+}
+/* Style de la page Participer */
+
+.description_form, .description_challenge {
+	background: #eae5d2;
+	border: 1px solid #ded8c2;
+	padding: 5px;
+}
+.description_form a {
+	color: #303030;
+	text-decoration: none;
+}
+ul.nav-tabs li a {
+    background-color: #eae5d2!important;
+    font-weight: bold!important;
+    color: #303030!important;
+    border-left: 2px solid #303030!important;
+    border-top: 2px solid #303030!important;
+    border-right: 2px solid #303030!important;
+    border-bottom: 1px dashed #303030!important;
+    transition: all 0.5s linear;
+}
+ul.nav-tabs li.active a {
+    background-color: #303030!important;
+    color: #FFFFFF!important;
+    border-top: 2px solid #eaa400!important;
+    border-left: 2px solid #eaa400!important;
+    border-right: 2px solid #eaa400!important;
+    transition: all 0.5s linear;
+}
+
+/* Style d'alertes */
+
+.alerte {
+	padding: 5px 10px;
+	border-radius: 5px;
+	width: 80%;
+	margin: auto auto;
+	display: block;
+}
+
+.alerte-error {
+	background-color: #c93b3b;
+	color: #FFFFFF;
+	border: 1px solid #950c0c;
+}
+
+.alerte-info {
+	background-color: #70d1ff;
+	color: #FFFFFF;
+	border: 1px solid #028ab7;
+}
+.alerte-success {
+	background-color: #69c86a;
+	color: #FFFFFF;
+	border: 1px solid #209822;
+}
+
+/* Affichage de la liste des participations */
+
+.participationPicture {
+	position: relative;
+	width: 100%;
+	height: 155px;
+	border: 2px solid #000000;
+	border-radius: 4px;
+	background-size: 100%;
+	background-position: center center;
+	background-repeat: no-repeat;
+}
+
+.participationPicture > .participationUser {
+	position: absolute;
+	bottom:0;
+	left:0;
+	padding: 2px 4px;
+	width: 100%;
+	height: 20px;
+	text-align: center;
+	color: #FFFFFF;
+	font-weight: bold;
+	background: rgba(0,0,0,0.8);
+}
+
+.participationPicture.top1 {
+	border: 4px solid #FFD700;
+}
+.participationPicture.top2 {
+	border: 4px solid #C0C0C0;
+}
+.participationPicture.top3 {
+	border: 4px solid #614E1A;
+}
+
+input[type="file"] {
+    display: none;
+}
+label.file_upload {
+    color: #FFB400;
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 5px;
+    background: #303030;
+    border: 1px solid #FFB400;
+}
+label.file_upload:hover {
+	background: #404040;
+}

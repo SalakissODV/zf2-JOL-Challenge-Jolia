@@ -1,0 +1,196 @@
+<?php
+$this->headLink()->appendStylesheet('//jolstatic.fr/dofus/theme/3.0/standard/css/profile_style.css');
+$this->headTitle($concours->getTitreConcours());
+
+$tableau_etats = array("A venir", "En cours", "Vote du Jury", "Terminé");
+$tableau_etats_class = array("concoursAvenir", "concoursEnCours", "voteEnCours", "concoursTermine");
+$tableau_jeux = array("DOFUS PC", "DOFUS TOUCH", "DOFUS PC & DOFUS TOUCH");
+$tableau_jeux_class = array("dofusPc", "dofusTouch", "dofusBoth");
+
+$form_participation = $this->form_participation;
+$form_participation->prepare();
+
+$participation_exist = $this->participation_exist;
+
+?>
+<div id="idMyModal"></div>
+<div class="concours_title">
+	<h1><?php echo $concours->getTitreConcours();?></h1>
+	<div class="hidden-xs <?php echo $tableau_etats_class[$status];?>" style="position:absolute;right:5px;top:21px;margin-right:5px;"></div>
+	<div class="hidden-xs <?php echo $tableau_jeux_class[$concours->getGame()];?>" style="position:absolute;right:55px;top:21px;margin-right:5px;"></div>
+	<span>du <?php echo date("d/m/Y à H:i:s",$concours->getDebutConcours());?> au <?php echo date("d/m/Y à H:i:s",$concours->getFinConcours());?></span>
+	<br>
+	<div class="hidden-sm hidden-md hidden-lg <?php echo $tableau_etats_class[$status];?>"></div>
+	<div class="hidden-sm hidden-md hidden-lg <?php echo $tableau_jeux_class[$concours->getGame()];?>"></div>
+</div>
+<div class="row margeTop10">
+	<div class="text-center">
+		<a target="_blank" href="<?php echo $concours->getForumSubject();?>" class="btnchallenge">
+			EN DISCUTER SUR LES FORUMS
+		</a>
+	</div>
+</div>
+<br>
+<?php if($this->validPost) { ?>
+	<div class="row margeTop10" style="margin-left:0!important;margin-right:0!important!;">
+		<?php if($this->validPost == 0) { ?>
+			<div class="alert alert-danger text-center">Une erreur est survenue. Le fichier sélectionné est peut-être corrompu. Si le problème persiste, contactez-nous sur le forum.</div>
+		<?php } ?>
+		<?php if($this->validPost == 1) { ?>
+			<div class="alert alert-success text-center">OK ! Votre participation a été enregistrée avec succès, vous pouvez la retrouver dans l'onglet "Participer".</div>
+		<?php } ?>
+	</div>
+<?php  } ?>
+<br>
+<div class="row margeTop10" style="margin-left:0!important;margin-right:0!important!;">
+	<ul class="nav nav-tabs">
+		<li class="active"><a data-toggle="tab" href="#infos">Informations Générales</a></li>
+		<li><a data-toggle="tab" href="#participer">Participer</a></li>
+		<?php if($concours->getShowParticipations() == 1) { ?><li><a data-toggle="tab" href="#participations">Voir les participations</a></li><?php } ?>
+		<li><a data-toggle="tab" href="#me">Mes Infos</a></li>
+	</ul>
+	<div class="tab-content">
+		<div id="infos" class="tab-pane fade in active">
+			<div class="col-xs-2 col-md-4">
+				<img src="//jolstatic.fr/dofus/Modules/Challenge/main/jolia_challenge.png" class="img-responsive" alt=""/>
+			</div>
+			<div class="col-xs-10 col-md-8 description_challenge">
+				<?= $concours->getDescConcours() ?>
+			</div>
+		</div>
+		<div id="participer" class="tab-pane fade">
+			<?php
+				if($participation_exist == 0) {
+					?>
+					<div class="col-xs-12 col-md-6">
+						<?= $this->form()->openTag($form_participation) ?>
+						<div id="showImage" class="form-group text-center"></div>
+						<div class="form-group text-center">
+							<div class="input-group" style="margin:auto;">
+								<label class="file_upload" for="image_p"><i class="jol-icon jol-icon-cloud-upload"></i> Votre image / Your picture</label>
+								<?= $this->formFile($form_participation->get('image_p')) ?>
+							</div>
+						</div>
+						<div class="form-group">
+							<div class="input-group" style="margin:auto;">
+								<span class="input-group-addon">Texte descriptif :</span>
+								<?= $this->formTextarea($form_participation->get('desc_participation')) ?>
+							</div>
+						</div>
+						<div class="form-group text-center">
+							<?= $this->formButton($form_participation->get('participation_submit')) ?>
+						</div>
+						<?= $this->formRow($form_participation->get('security')) ?>
+						<?= $this->form()->closeTag($form_participation) ?>
+					</div>
+					<div class="col-xs-12 col-md-6 text-justify description_form">
+						<div class="alert alert-info text-center"><strong>Important !</strong> Tout formulaire envoyé 5min après le chargement de la page ne permettra pas d'ajouter votre participation sur le site. Vérifiez bien que votre participation s'affiche dans l'onglet "Participer" avant de quitter la page. Si le formulaire est affiché, renvoyez votre image !</div>
+						<p>
+							<em>
+								<strong>(FR)</strong> Sélectionnez l'image que vous souhaitez envoyer, il ne sera pas possible de la modifier une fois l'envoi effectué.<br>
+								<strong>(EN)</strong> Select the image which you wish to send, it will not be possible to modify her when she will be sent.
+							</em>
+						</p>
+						<p>
+							<div class="text-center"><strong>Optionnel / Optional</strong></div>
+							<em>
+								<strong>(FR)</strong> Vous pouvez indiquer une courte description à votre image.<br>
+								<strong>(EN)</strong> You can indicate a small description for your image.
+							</em>
+						</p>
+					</div>
+				<?php   } else { ?>
+					<div class="alerte alerte-error text-center">(FR) Tu as déjà envoyé ta participation à ce concours.<br>(EN) You have already sent your participation to this contest.</div><br><br>
+					<?php if($participation_exist[0] != null) { ?>
+					<blockquote class="text-justify"><?= htmlentities($participation_exist[0]) ?></blockquote><br>
+					<?php } ?>
+					<div class="col-xs-8 col-xs-offset-2 col-md-6 col-md-offset-3">
+						<a href="<?= $participation_exist[1] ?>" class="fancybox img-thumbnail" style="width:100%">
+							<div style="width:100%;height:150px;padding:2px;background:url(<?= $participation_exist[1] ?>) no-repeat center;background-size:contain;"></div>
+						</a>
+					</div>
+
+				<?php } ?>
+			</div>
+			<?php if($concours->getShowParticipations() == 1) { ?>
+				<div id="participations" class="tab-pane fade">
+					<div clas="row">
+						<div class="row" style="margin:0!important;"><div class="alert alert-info text-center">Cliquez sur une participation pour en voir les détails !</div></div>
+						<?php
+							foreach($participations as $participation) {
+								$participantName = 'Anonyme';
+								if($this->status != 2) {
+									$participantName = $this->userRO->find($participation->getParticipantId())->getPseudonym();
+								}
+								$desc = str_replace("'", "", $participation->getDescParticipation());
+								echo '<div class="col-xs-6 col-md-4" style="margin-bottom: 10px;"><div data-toggle="modal" data-name="'.$participantName.'" data-image="'.$participation->getImgParticipation().'" data-text=\'\' data-target="#modal_participation" style="cursor:pointer;background-image: url('.$participation->getImgParticipation().');" class="linkmodal participationPicture"><span class="participationUser">'.$participantName.'</span></div></div>';
+							}
+						?>
+					</div>
+				</div>
+			<?php } ?>
+		<div id="me" class="tab-pane fade">
+			<div class="col-xs-12 col-md-6">
+				<div class="col-xs-12 dofusinfo">
+					<div class="media">
+						<div class="media-left media-middle">
+							<img class="media-object logo_dofus" src="//jolstatic.fr/dofus/Modules/Profil/logo_dofus.png"/>
+						</div>
+						<div class="media-body">
+							<ul style="list-style:none;padding:0!important;">
+								<li><strong>Dofus PC :</strong> <?= $this->escapeHtml($utilisateur->getCompteDofus()) ?></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12 touchinfo">
+					<div class="media">
+						<div class="media-left media-middle">
+							<img class="media-object logo_dofus" src="//jolstatic.fr/dofus/Modules/Profil/logo_dofus_touch.png"/>
+						</div>
+						<div class="media-body">
+							<ul style="list-style:none;padding:0!important;">
+								<li><strong>Dofus Touch :</strong> <?= $this->escapeHtml($utilisateur->getCompteDofusTouch()) ?></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="col-xs-12 text-center"><br>
+					<a class="btnchallenge" href="https://dofus.jeuxonline.info/profil/edit">Modifier mon profil / Update my profile</a>
+				</div>
+			</div>
+			<div class="col-xs-12 col-md-6 description_form">
+				<p>
+					<em>
+						<strong>(FR)</strong> Inscrivez votre pseudo (public) de compte Ankama, il apparaît sur le site officiel et sur les Forums Ankama.<br>
+						<strong>(EN)</strong> Register your Ankama account nickname, he appears on the official website and on the Ankama's Forums.
+					</em>
+				</p>
+				<p>
+					<em>
+						<strong>(FR)</strong> Vous pouvez également indiquer votre pseudo (public) de votre compte Dofus Touch, s'il est différent de votre compte Dofus PC..<br>
+						<strong>(EN)</strong> You can also register your account nickname for Dofus Touch if he's different from Dofus Pc.
+					</em>
+				</p>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div id="modal_participation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+ <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;  </button>
+        <h4 class="modal-title" id="myModalLabel">Participation envoyée par <strong id="modal_participant_name"></strong></h4>
+      </div>
+      <div class="modal-body">
+        <img src="" id="modal_image_participation" class="img-thumbnail" style="width:80%;margin:auto;display:block;"/><br>
+        <blockquote id="modal_desc_participation"></blockquote>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
+      </div>
+    </div>
+  </div>
+</div>

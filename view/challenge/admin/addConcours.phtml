@@ -1,0 +1,73 @@
+<?php
+	$this->headScript()->appendFile('https://jolstatic.fr/dofus/theme/3.0/standard/js_spe/datepicker-fr.js');
+	$this->headScript()->appendFile('https://jolstatic.fr/dofus/theme/3.0/standard/js_spe/mask.js');
+	$this->headScript()->appendFile('https://jolstatic.fr/dofus/theme/3.0/standard/js_spe/Summernote/summernote.min.js');
+	$this->headLink()->appendStylesheet('https://jolstatic.fr/dofus/theme/3.0/standard/js_spe/Summernote/summernote.css');
+
+	$this->headTitle("Ajouter un concours - Challenge de Jolia");
+	$form = $this->concours_form;
+?>
+<div class="row" style="margin:0!important;">
+	<div class="col-xs-12 col-md-10 col-md-offset-1">
+		<? if($this->validPost == 1) { ?>
+		<div class="alert alert-success text-center">
+			<strong>OK !</strong> Le concours "<strong><?= $_POST['titre_concours'] ?></strong>" a bien été ajouté !
+		</div>
+		<? } ?>
+		<h2>Ajouter un concours</h2>
+		<?= $this->form()->openTag($form) ?>
+			<div class="form-group">
+				<div class="input-group">
+					<span class="input-group-addon">Nom du concours :</span>
+					<?= $this->formText($form->get('titre_concours')) ?>
+				</div><br>
+				<div class="input-group">
+					<span class="input-group-addon">URL du sujet Forum :</span>
+					<?= $this->formText($form->get('forum_sujet')) ?>
+				</div><br>
+				<div class="input-group">
+					<span class="input-group-addon">Début du concours :</span>
+					<?= $this->formText($form->get('debut_concours')) ?>
+				</div><br>
+				<div class="input-group">
+					<span class="input-group-addon">Fin du concours :</span>
+					<?= $this->formText($form->get('fin_concours')) ?>
+				</div><br>
+				<div class="row" style="margin:0!important;">
+					<div class="input-group">
+						<span class="input-group-addon">Utilisateurs externes :</span>
+						<?= $this->formText($form->get('allowed_users')) ?>
+					</div>
+					<em>Indiquez l'ID de compte des différents invités autorisés à voter, séparés par une virgule (,).</em>
+				</div>
+			</div><br>
+			<div class="form-group">
+				<div class="input-group">
+					<span class="input-group-addon">Jeu associé :</span>
+					<?= $this->formSelect($form->get('choix_jeu')) ?>
+				</div><br>
+				<div class="input-group">
+					<span class="input-group-addon">Participations :</span>
+					<?= $this->formSelect($form->get('voir_participations')) ?>
+				</div><br>
+				<div class="input-group">
+					<?= $this->formTextarea($form->get('desc_concours')) ?>
+				</div>
+			</div>
+			<div class="form-group text-center">
+				<?= $this->formHidden($form->get('security')) ?>
+				<?= $this->formSubmit($form->get('concours_submit')) ?>
+			</div>
+		<?= $this->form()->closeTag($form) ?>
+	</div>
+</div>
+<script>
+	$(function() {
+		$('textarea[name="desc_concours"]').summernote({
+        placeholder: 'Indiquez la description de ce concours',
+        tabsize: 2,
+        height: 300,
+        lang: 'fr-FR'
+    });
+});
+</script>

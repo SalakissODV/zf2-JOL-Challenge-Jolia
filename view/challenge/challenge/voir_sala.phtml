@@ -1,0 +1,167 @@
+<?php
+$this->headTitle($concours->getTitreConcours());
+
+$tableau_etats = array("A venir", "En cours", "Vote du Jury", "Terminé");
+$tableau_etats_class = array("concoursAvenir", "concoursEnCours", "voteEnCours", "concoursTermine");
+$tableau_jeux = array("DOFUS PC", "DOFUS TOUCH", "DOFUS PC & DOFUS TOUCH");
+$tableau_jeux_class = array("dofusPc", "dofusTouch", "dofusBoth");
+?>
+
+<div class="concours_title">
+	<h1><?php echo $concours->getTitreConcours();?></h1>
+	<div class="hidden-xs <?php echo $tableau_etats_class[$status];?>" style="position:absolute;right:5px;top:21px;margin-right:5px;"></div>
+	<div class="hidden-xs <?php echo $tableau_jeux_class[$concours->getGame()];?>" style="position:absolute;right:55px;top:21px;margin-right:5px;"></div>
+	<span>du <?php echo date("d/m/Y à H:i:s",$concours->getDebutConcours());?> au <?php echo date("d/m/Y à H:i:s",$concours->getFinConcours());?></span>
+	<br>
+	<div class="hidden-sm hidden-md hidden-lg <?php echo $tableau_etats_class[$status];?>"></div>
+	<div class="hidden-sm hidden-md hidden-lg <?php echo $tableau_jeux_class[$concours->getGame()];?>"></div>
+</div>
+<div class="row margeTop10">
+	<div class="text-center">
+		<a target="_blank" href="<?php echo $concours->getForumSubject();?>" class="btnchallenge">
+			EN DISCUTER SUR LES FORUMS
+		</a>
+	</div>
+</div>
+<br>
+<div class="row margeTop10" style="margin-left:0!important;margin-right:0!important!;">
+	<ul class="nav nav-tabs">
+		<li class="active"><a data-toggle="tab" href="#infos">Informations Générales</a></li>
+		<li><a data-toggle="tab" href="#participations">Participations & Résultats</a></li>
+		<?php
+		if($this->status == 3) {
+			?>
+			<li><a data-toggle="tab" href="#details_votes">Classement détaillé</a></li>
+			<?php
+		}
+		?>
+	</ul>
+	<div class="tab-content">
+		<div id="infos" class="tab-pane fade in active">
+			<div class="col-xs-2 col-md-4">
+				<img src="//jolstatic.fr/dofus/Modules/Challenge/main/jolia_challenge.png" class="img-responsive" alt=""/>
+			</div>
+			<div class="col-xs-10 col-md-8 description_challenge">
+				<?= $concours->getDescConcours() ?>
+			</div>
+		</div>
+		<div id="participations" class="tab-pane fade">
+			<div clas="row">
+				<div class="row" style="margin:0!important;"><div class="alert alert-info text-center">Cliquez sur une participation pour en voir les détails !</div></div>
+				<?php
+				if($status == 3) {
+					?>
+					<h2>Vainqueurs du concours</h2>
+					<div class="row" style="margin:0!important;">
+						<div class="col-xs-4 col-md-4" style="margin-bottom: 10px;">
+							<div data-toggle="modal" data-name="<?= $podium[0]['user'] ?>" data-image="<?= $podium[0]['img'] ?>" data-text="<?= $podium[0]['desc'] ?>" data-target="#modal_participation" style="cursor:pointer;background-image: url(<?= $podium[0]['img'] ?>);" class="linkmodal participationPicture top1">
+								<span class="participationUser"><?= $podium[0]['user'] ?></span>
+							</div>
+							<div class="text-center"><strong>1<sup>ère</sup> Place</strong></div>
+						</div>
+						<div class="col-xs-4 col-md-4" style="margin-bottom: 10px;">
+							<div data-toggle="modal" data-name="<?= $podium[1]['user'] ?>" data-image="<?= $podium[1]['img'] ?>" data-text="<?= $podium[1]['desc'] ?>" data-target="#modal_participation" style="cursor:pointer;background-image: url(<?= $podium[1]['img'] ?>);" class="linkmodal participationPicture top2">
+								<span class="participationUser"><?= $podium[1]['user'] ?></span>
+							</div>
+							<div class="text-center"><strong>2<sup>nde</sup> Place</strong></div>
+						</div>
+						<div class="col-xs-4 col-md-4" style="margin-bottom: 10px;">
+							<div data-toggle="modal" data-name="<?= $podium[2]['user'] ?>" data-image="<?= $podium[2]['img'] ?>" data-text="<?= $podium[2]['desc'] ?>" data-target="#modal_participation" style="cursor:pointer;background-image: url(<?= $podium[2]['img'] ?>);" class="linkmodal participationPicture top3">
+								<span class="participationUser"><?= $podium[2]['user'] ?></span>
+							</div>
+							<div class="text-center"><strong>3<sup>ème</sup> Place</strong></div>
+						</div>
+					</div>
+					<?php
+				}
+				?>
+
+				<h2>Toutes les participations</h2>
+				<?php
+				foreach($concours->getParticipations() as $participation) {
+					$participantName = 'Anonyme';
+					if($this->status != 2) {
+						$participantName = $this->userRO->find($participation->getParticipantId())->getPseudonym();
+					}
+					$desc = str_replace("'", "", $participation->getDescParticipation());
+					echo '<div class="col-xs-6 col-md-4" style="margin-bottom: 10px;"><div data-toggle="modal" data-name="'.$participantName.'" data-image="'.$participation->getImgParticipation().'" data-text=\''.$desc.'\' data-target="#modal_participation" style="cursor:pointer;background-image: url('.$participation->getImgParticipation().');" class="linkmodal participationPicture"><span class="participationUser">'.$participantName.'</span></div></div>';
+				}
+				?>
+			</div>
+		</div>
+		<?php
+		if($this->status == 3) {
+			?>
+			<div id="details_votes" class="tab-pane fade">
+				<h2>Classement détaillé</h2>
+				<p>Découvrez ci-dessous le classement complet de cette édition avec la moyenne de chaque participant. Le détail des notes de chaque votant sera prochainement affiché ainsi que plus de précision sur la moyenne dans les cas d'égalités que vous rencontrez sur ce classement.</p><br>
+				<table id="search_result" class="table table-bordered table-striped" style="width: 50%;margin:auto auto;" data-page-length="100">
+					<thead>
+						<tr>
+							<th style="vertical-align:middle;" width="10%">Participation</th>
+							<th style="vertical-align:middle;" width="15%">Participant</th>
+							<th style="vertical-align:middle;" width="15%">Moyenne des notes</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
+						foreach($podium as $participant) {
+							?>
+							<tr>
+								<td style="vertical-align:middle;" class="text-center"><a href="<?= $participant['img'] ?>" class="fancybox"><img src="<?= $participant['img'] ?>" class="img-thumbnail" style="height:50px!important;" alt="Participation de <?= $participant['user'] ?>" title="Participation de <?= $participant['user'] ?>"/></a></td>
+								<td style="vertical-align:middle;"><strong><a href="https://dofus.jeuxonline.info/profil/<?= $participant['userid'] ?>" target="_blank"><?= $participant['user'] ?></a></strong></td>
+								<td class="text-center" style="vertical-align:middle;">
+									<p><?= round($participant['result'],1) ?> / 5</p>
+								</td>
+							</tr>
+							<?php
+						}
+						?>
+					</table>
+					<script>
+						$(function() {
+							$("#search_result").DataTable({
+								"order": [
+								[4, "desc"]
+								],
+								"columnDefs": [
+								{ "type": "num", "targets": 4 }
+								],
+								pagingType: 'first_last_numbers',
+								language: {
+									paginate: {
+										first: 'Premier',
+										last: 'Dernier'
+									},
+									zeroRecords: "Aucune donnée ne correspond à  votre recherche",
+									info: "Affichage de _START_ à  _END_ sur _TOTAL_ données",
+									infoFiltered: " (filtrée(s) sur _MAX_ données)",
+									lengthMenu: "Afficher _MENU_ données",
+									search: "Rechercher :"
+								}
+							});
+						});
+					</script>
+				</div>
+				<?php
+			}
+			?>
+		</div>
+	</div>
+	<div id="modal_participation" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;  </button>
+					<h4 class="modal-title" id="myModalLabel">Participation envoyée par <strong id="modal_participant_name"></strong></h4>
+				</div>
+				<div class="modal-body">
+					<img src="" id="modal_image_participation" class="img-thumbnail" style="width:80%;margin:auto;display:block;"/><br>
+					<blockquote id="modal_desc_participation"></blockquote>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-dismiss="modal">Fermer</button>
+				</div>
+			</div>
+		</div>
+	</div>

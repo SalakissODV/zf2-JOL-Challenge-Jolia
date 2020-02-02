@@ -1,0 +1,55 @@
+<?php
+$this->headLink()->appendStylesheet($this->basePath('module_style/challenge_style.css'));
+$this->headScript()->appendFile($this->basePath('module_js/challenge/script.js'));
+$this->headScript()->appendFile($this->basePath('module_js/challenge/admin_script.js'));
+
+$idJol = $this->user()->getId();
+
+$this->headMeta()->setProperty('og:url', 'https://dofus.jeuxonline.info/challenge-jolia');
+$this->headMeta()->setProperty('og:image', 'https://jolstatic.fr/dofus/Modules/Challenge/main/og_picture.png');
+$this->headMeta()->setProperty('og:title', 'Challenge de Jolia | JeuxOnline - Dofus');
+
+?>
+
+<div class="container-fluid">
+	<!-- div class="row" -->
+	<div class="jol-layout-row-content jol-layout-flex">
+		<div class="col-xs-12 col-md-9">
+			<?= $this->openModule() ?><?= $this->openModuleBody() ?> 
+			<article class="jol-article">
+				<div class="jol-article-body" style="padding:0!important;">
+					<div class="row" style="margin:0!important;">
+						<img src="//jolstatic.fr/dofus/Modules/Challenge/main/banniere_challenge.jpg" class="img-responsive" alt=""/>
+						<div class="nav_challenge">
+							<div class="col-xs-4">
+								<a href="<?php echo $this->url('challenge/admin'); ?>">Accueil</a>
+							</div>
+							<div class="col-xs-4" id="btn_concours">
+								<span>ADMINISTRATION</span>
+							</div>
+						</div>
+					</div>
+					<div class="row" style="margin:0!important;padding:5px;">
+						<?= $this->content ?>
+					</div>
+				</div>
+
+			</article>
+			<?= $this->closeModuleBody() ?><?= $this->closeModule() ?>
+		</div>
+		<div class="col-xs-12 col-md-3 bg_color_aside">
+			<div class="margeTop5" id="block_aside_misc">
+				<?= $this->openModule() ?><?= $this->openModuleBody() ?> 
+				<div class="text-center">
+					<a style="color:#ffb400;font-weight:bold;" href="<?= $this->url('challenge') ?>">Retour partie publique</a>
+				</div>
+				<div class="margeTop10 text-center" id="block_jeuxonline">
+					<a href="https://www.jeuxonline.info/">
+						<img src="//jolstatic.fr/dofus/Modules/Home/images/jeuxonline.png" alt="jeuxonline">
+					</a>
+				</div>
+				<?= $this->closeModuleBody() ?><?= $this->closeModule() ?>
+			</div>
+		</div>
+	</div>
+</div>

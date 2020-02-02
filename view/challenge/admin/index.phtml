@@ -1,0 +1,97 @@
+<?php 
+$this->headLink()->appendStylesheet('https://jolstatic.fr/dofus/theme/3.0/standard/js_spe/datatables.min.css');
+$this->headScript()->appendFile('https://jolstatic.fr/dofus/theme/3.0/standard/js_spe/datatables.min.js');
+
+$title = 'Administration du Challenge de Jolia';
+$this->headTitle($title);
+$concours = $this->concours;
+$timestampNow = time();
+
+$tableau_etats = array("A venir", "En cours", "Vote du Jury", "Terminé");
+$tableau_etats_class = array("concoursAvenir", "concoursEnCours", "voteEnCours", "concoursTermine");
+$tableau_jeux = array("DOFUS PC", "DOFUS TOUCH", "DOFUS PC & DOFUS TOUCH");
+$tableau_jeux_class = array("dofusPc", "dofusTouch", "dofusBoth");
+?>
+<div class="row" style="margin: 10px 0 0 0!important;">
+	<h2>Gestion des concours</h2>
+	<div class="pull-right">
+		<a href="<?= $this->url('challenge/admin/addConcours') ?>" class="btn btn-info"><i class="jol-icon jol-icon-plus"></i> Ajouter un concours</a>
+	</div>
+	<br><br>
+	<table id="search_result" class="table table-bordered table-striped" data-page-length="25">
+		<thead>
+			<tr>
+				<th></th>
+				<th>Nom</th>
+				<th>Jeu</th>
+				<th>Statut</th>
+				<th>Début - Fin</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php
+			foreach($concours as $element) {
+				$vote = "";
+				$resultat = "";
+				$status = 0;
+				if($timestampNow > $element->getDebutConcours() && $timestampNow < $element->getFinConcours()) {
+		           		$status = 1; // En cours
+		           	} else if ($timestampNow > ($element->getFinconcours() + 604800)) {
+			            $status = 3; // Terminé
+			            $resultat = '<a href="'.$this->url('challenge/admin/resultConcours', ['id' => $element->getIdConcours()]).'" class="btnResult btn btn-xs btn-success"><i class="jol-icon jol-icon-bars"></i></a>';
+			        } else if ($timestampNow > $element->getFinConcours()) {
+			            $status = 2; // Vote du Jury
+			            $vote = '<a href="'.$this->url('challenge/admin/voteConcours', ['id' => $element->getIdConcours()]).'" class="btnVote btn btn-xs btn-success"><i class="jol-icon jol-icon-flag"></i></a>';
+			        }  else {
+			            $status = 0; // Avenir
+			        }
+			        ?>
+			        <tr id="concours_<?= $element->getIdConcours() ?>">
+			        	<td><?= $element->getFinConcours() ?></td>
+			        	<td class="text-center"><strong><?= $element->getTitreConcours() ?></strong></td>
+			        	<td class="text-center"><div class="<?= $tableau_jeux_class[$element->getGame()] ?>"></div></td>
+			        	<td class="text-center"><div class="<?= $tableau_etats_class[$status] ?>"></div><br><strong><?= $tableau_etats[$status]?></td>
+			        	<td class="text-center"><small>Début : <?= date("d/m/Y à H:i:s", $element->getDebutConcours()) ?><br>Fin : <?= date("d/m/Y à H:i:s", $element->getFinConcours()) ?></small></td>
+			        	<td class="text-center"><?= $vote ?> <?= $resultat ?> <a href="<?= $this->url('challenge/admin/editConcours', ['id' => $element->getIdConcours()]) ?>" class="btnEdit btn btn-xs btn-info"><i class="jol-icon jol-icon-pencil"></i></a> <a data-name="<?= $element->getTitreConcours() ?>" data-concours="<?= $element->getIdConcours() ?>" class="btnDelete btn btn-xs btn-danger"><i class="jol-icon jol-icon-close"></i></a> <a href="<?= $this->url('challenge/admin/showConcours', ['id' => $element->getIdConcours()]) ?>" class="btnSee btn-xs btn btn-warning"><i class="jol-icon jol-icon-eye"></i></a></td>
+			        </tr>
+			        <?php
+			    }
+			    ?>
+			</tbody>
+		</table>
+	</div>
+	<div id="dialogdelConcours" title="Supprimer un Concours">
+		<div class="text-center">
+			<strong>Êtes-vous certain de vouloir supprimer le concours "<span id="titreconcours"></span>" ?</strong><br>
+			<small>Il sera définitivement retiré de la base de données et toutes les informations liées (participations et votes) seront également définitivement perdues.</small>
+			<input type="hidden" id="selectConcours"/>
+		</div>
+	</div>
+
+<script>
+	$(function() {
+		$("#search_result").DataTable({
+	        "columnDefs": [{
+	            "targets": [0],
+	            "visible": false,
+	            "searchable": false
+	        }],
+	        "order": [
+	            [0, "desc"]
+	        ],
+	        pagingType: 'first_last_numbers',
+	        language: {
+	            paginate: {
+	                first: 'Premier',
+	                last: 'Dernier'
+	            },
+	            zeroRecords: "Aucune donnée ne correspond à  votre recherche",
+	            info: "Affichage de _START_ à  _END_ sur _TOTAL_ données",
+	            infoFiltered: " (filtrée(s) sur _MAX_ données)",
+	            lengthMenu: "Afficher _MENU_ données",
+	            search: "Rechercher :"
+	        }
+	    });
+	});
+</script>
